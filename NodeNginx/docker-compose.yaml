@@ -1,0 +1,49 @@
+networks:
+  nodeappnet:
+    driver: bridge
+
+services:
+  app:
+    build:
+      context: node
+    networks:
+      - nodeappnet
+    volumes:
+      - ./node:/usr/src/app
+    tty: true
+    container_name: nodeapp
+    ports:
+      - "3000:3000"
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_USER:root
+      - MYSQL_PASSWORD=lala
+      - MYSQL_HOST:db
+  nginx:
+    build:
+      context: nginx
+    container_name: nginx
+    networks:
+      - nodeappnet
+    ports:
+      - "8080:80"
+    depends_on:
+      - app  
+         
+  db: 
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0 --init-file /docker-entrypoint-initdb.d/init.sql
+    container_name: mysqldb
+    restart: always
+    tty: true
+    ports:
+      - 3306:3306
+    volumes: 
+      - ./mysql:/var/lib/mysql
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=lala
+    networks:
+     - nodeappnet
