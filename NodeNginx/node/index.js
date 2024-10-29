@@ -29,7 +29,7 @@ app.get('/', async (req, res) => {
           });
           console.log(rows); 
           console.log(users); 
-          res.status(200).send(`<h1>Full Cycle Rocks...!</h1> ${users}`)
+          res.status(200).send(`<h1>Full Cycle Rocks!</h1> ${users}`)
           
       });
     } catch (error) {
