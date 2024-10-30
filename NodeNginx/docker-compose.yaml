@@ -10,6 +10,7 @@ services:
       - nodeappnet
     volumes:
       - ./node:/usr/src/app
+      - /usr/src/app/node_modules
     tty: true
     container_name: nodeapp
     ports:
